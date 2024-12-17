@@ -84,13 +84,11 @@ const UserSchema = new mongoose.Schema({
 
 
 UserSchema.statics.findById = function (id) {
-  console.log('into user model');
   if (!mongoose.Types.ObjectId.isValid('674d912a70be5129a417a72d')) {
     throw new Error('Invalid ObjectId format');
   }
   else
   {
-    console.log('valid hai');
     return this.findOne({ _id: new mongoose.Types.ObjectId(id) });
   }
   

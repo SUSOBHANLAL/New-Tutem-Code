@@ -12,11 +12,14 @@ const sendEmail = (to, token) => {
     },
   });
 
+const host = process.env.HOST ?? 'localhost';
+const port = process.env.PORT ?? 5000;
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
     subject: "Email Verification",
-    text: `Click the link to verify your email: http://localhost:5000/api/auth/verify-email/${token}`,
+    text: `Click the link to verify your email: http://${host}:${port}/api/auth/verify-email/${token}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

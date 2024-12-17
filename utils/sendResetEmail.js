@@ -1,6 +1,7 @@
 const { text } = require("express");
 const nodemailer = require("nodemailer");
-
+const host = process.env.HOST ?? 'localhost';
+const port = process.env.PORT ?? 5000;
 const sendResetEmail = (to, token) => {
   const transporter = nodemailer.createTransport({
     service: "gmail", // Change this as needed
@@ -17,7 +18,7 @@ const sendResetEmail = (to, token) => {
     from: process.env.EMAIL_USER,
     to,
     subject: "Email Verification",
-    text: `Click the link to verify your email: http://localhost:5000/api/auth/reset-password/${token}  Click the link to verify your email: click here if you are doing in frontend http://127.0.0.1:5500/reset-password.html?token=${token}`,
+    text: `Click the link to verify your email: http://${host}:${port}/api/auth/reset-password/${token}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
