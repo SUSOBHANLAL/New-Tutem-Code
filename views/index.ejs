@@ -59,6 +59,19 @@
         socket.emit("updateDriverLocation", data);
         console.log("New driver location added:", data);
       }, 1000); // 1000 ms = 1 second
+
+
+      const rideRequestData = {
+        driverId: '676284e75699d7930ee2b865',
+        origin_name: 'Location A',
+        origin_lat:  55.555,
+        origin_long: 200.7657, 
+        dest_name:    'Location B',
+        dest_lat:  55.555,
+        dest_long: 200.7657
+      };
+      socket.emit('rideRequest', rideRequestData);
+
     </script>
   </body>
 </html>

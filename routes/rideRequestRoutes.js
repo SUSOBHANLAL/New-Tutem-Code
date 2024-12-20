@@ -1,8 +1,8 @@
 // routes/RideRequestRoutes.js
 const express = require("express");
 const router = express.Router();
-const RideRequestController = require("../controllers/rideRequestController");
+const rideRequestController = require("../controllers/rideRequestController");
 
-router.post("/add-rides", RideRequestController.createRideRequest);
+router.get("/rides", rideRequestController.loadRideRequest);
 
 module.exports = router;
