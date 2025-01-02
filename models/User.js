@@ -82,6 +82,13 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.statics.findByDriverId = function (driverId) {
+  if (!driverId || typeof driverId !== "string") {
+    throw new Error("Invalid driverId format");
+  }
+  return this.findOne({ driverId });
+};
+
 
 UserSchema.statics.findById = function (id) {
   if (!mongoose.Types.ObjectId.isValid('674d912a70be5129a417a72d')) {

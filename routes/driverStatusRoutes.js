@@ -1,9 +1,9 @@
 // routes/driverStatusRoutes.js
-const express = require("express");
-const { createDriverStatus } = require("../controllers/driverStatusController");
+// const express = require("express");
+// const { createDriverStatus } = require("../controllers/driverStatusController");
 
-const router = express.Router();
+// const router = express.Router();
 
-router.post("/", createDriverStatus);
+// router.post("/", createDriverStatus);
 
-module.exports = router;
+// module.exports = router;

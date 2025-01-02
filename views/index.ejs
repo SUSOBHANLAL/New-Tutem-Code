@@ -1,4 +1,4 @@
-<!-- views/index.ejs -->
+<!-- views/index.ejs
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -47,31 +47,117 @@
         longitude: "2.123665",
       };
 
-      setInterval(() => {
-        // Here, replace the latitude and longitude with real dynamic data
-        const driverId = "driver" + Math.random() * 51;
-        const latitude = Math.random() * 90;
-        const longitude = Math.random() * 180;
-        const status    = 'Idle';
-        const data = { driverId, latitude, longitude, status };
+      // setInterval(() => {
+      //   // Here, replace the latitude and longitude with real dynamic data
+      //   const driverId  = "driver" + Math.random() * 51;
+      //   const latitude  = 37.774 + 0.001; //Math.random() * 90;
+      //   const longitude = 122.418 + 0.01; //Math.random() * 180;
+      //   const status    = 'Idle';
+      //   const data = { driverId, latitude, longitude, status };
 
-        // Emit the location update
-        socket.emit("updateDriverLocation", data);
-        console.log("New driver location added:", data);
-      }, 1000); // 1000 ms = 1 second
+      //   // Emit the location update
+      //   socket.emit("updateDriverLocation", data);
+      //   console.log("New driver location added:", data);
+      // }, 1000); // 1000 ms = 1 second
 
 
-      const rideRequestData = {
-        driverId: '676284e75699d7930ee2b865',
-        origin_name: 'Location A',
-        origin_lat:  55.555,
-        origin_long: 200.7657, 
-        dest_name:    'Location B',
-        dest_lat:  55.555,
-        dest_long: 200.7657
-      };
-      socket.emit('rideRequest', rideRequestData);
+      // const rideRequestData = {
+      //   driverId: '676284e75699d7930ee2b865',
+      //   origin_name: 'Location A',
+      //   origin_lat:  55.555,
+      //   origin_long: 200.7657, 
+      //   dest_name:    'Location B',
+      //   dest_lat:  55.555,
+      //   dest_long: 200.7657
+      // };
+      // socket.emit('rideRequest', rideRequestData);
 
     </script>
   </body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Driver Location Tracker</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/socket.js" defer></script>
+  </head>
+  <body>
+    <h1>Driver Location Tracker</h1>
+    <button id="addDriverBtn">Add Random Driver</button>
+    <ul id="driversList"></ul>
+  </body>
+
+
+
+  
+  <script>
+    // const driverId = "driver11";
+    //  function sendLocation() {
+    //    debugger;
+    //    if ("geolocation" in navigator) {
+    //      debugger;
+    //      //navigator.geolocation.getCurrentPosition((position) => {
+    //      const latitude = "-255.0110";
+    //      const longitude = "313.0110";
+    //      const driverData = {
+    //        driverId: driverId, // Replace with unique driver ID
+    //        latitude,
+    //        longitude,
+    //      };
+    //    } else {
+    //      alert("Geolocation is not supported by this browser.");
+    //    }
+    //  }
+
+
+    //  socket.on('message', (data) => {
+    //        console.log(data);  // Should print "Hello from server!"
+    //    });
+
+
+    //  socket.on("driverLocationUpdate", (data) => {
+    //    console.log("New driver location Updated:", data);
+    //  });
+    //  const driverData = {
+    //    driverId: "driver1", // Replace with unique driver ID
+    //    latitude: "0.123654",
+    //    longitude: "2.123665",
+    //  };
+
+    //  setInterval(() => {
+    //    // Here, replace the latitude and longitude with real dynamic data
+    //    const driverId  = "driver" + Math.random() * 51;
+    //    const latitude  = 37.774 + 0.001; //Math.random() * 90;
+    //    const longitude = 122.418 + 0.01; //Math.random() * 180;
+    //    const status    = 'Idle';
+    //    const data = { driverId, latitude, longitude, status };
+
+    //    // Emit the location update
+    //    socket.emit("updateDriverLocation", data);
+    //    console.log("New driver location added:", data);
+    //  }, 1000); // 1000 ms = 1 second
+
+    // setInterval(() => {
+    //  const rideRequestData = {
+    //    driverId: '676284e75699d7930ee2b865',
+    //    userId: '256564e75699d7930ee2b865',
+    //    origin_name: 'Location A',
+    //    origin_lat:  55.555,
+    //    origin_long: 200.7657, 
+    //    dest_name:    'Location B',
+    //    dest_lat:  55.555,
+    //    dest_long: 200.7657
+    //  };
+    //  socket.emit('rideRequest', rideRequestData);
+    // }, 1000); // 1000 ms = 1 second
+
+   </script>
 </html>
+

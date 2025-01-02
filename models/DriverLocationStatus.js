@@ -1,21 +1,6 @@
-// const mongoose = require("mongoose");
-
-// const driverSchema = new mongoose.Schema({
-//   driverId: { type: String, required: true },
-//   latitude: { type: Number, required: true },
-//   longitude: { type: Number, required: true },
-//   loginTime: { type: Date, required: true, default: Date.now },
-//   logoutTime: { type: Date },
-//   updatedAt: { type: Date, default: Date.now },
-//   status: { type: String },
-// });
-// driverSchema.index({ location: "2dsphere" });
-
-// module.exports = mongoose.model("DriverLocationStatus", driverSchema);
-
 const mongoose = require("mongoose");
 
-const driverSchema = new mongoose.Schema({
+const driverLocationSchema = new mongoose.Schema({
   driverId: { type: String, required: true },
   location: {
     type: { type: String, enum: ["Point"], required: true },
@@ -24,9 +9,35 @@ const driverSchema = new mongoose.Schema({
   loginTime: { type: Date, required: true, default: Date.now },
   logoutTime: { type: Date },
   updatedAt: { type: Date, default: Date.now },
-  status: { type: String },
+  status: { type: String, enum: ["active", "inactive", "idle", "assigned"], default: "idle" },
 });
 
-driverSchema.index({ location: "2dsphere" });
+driverLocationSchema.index({ location: "2dsphere" });
 
-module.exports = mongoose.model("DriverLocationStatus", driverSchema);
+driverLocationSchema.statics.findById = function (id) {
+  return this.findOne({ _id: new mongoose.Types.ObjectId(id) });
+};
+
+driverLocationSchema.statics.findByDriverId = function(driverId) {
+  try {
+    console.log('Dri ID', driverId);
+    if (!driverId || typeof driverId !== "string") {
+      throw new Error("Invalid driverId format");
+      
+    }
+    return this.findOne({ driverId: driverId });
+  }catch (err) {
+    console.error('Error finding driver status:', err);
+    throw err; // You can throw or handle the error here
+  }
+};
+
+driverLocationSchema.statics.findByDriverIdAndUpdate = function(driverId, updateData) {
+  return this.findOneAndUpdate(
+    { driverId: driverId },        // Find the document with the specific driverId
+    { $set: updateData, $currentDate: { updatedAt: true } }, // Set the update data and update the updatedAt timestamp
+    { new: true }                  // Return the modified document rather than the original
+  );
+};
+
+module.exports = mongoose.model("DriverLocationStatus", driverLocationSchema);

@@ -1,31 +1,28 @@
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
+const cors = require('cors'); // CORS import
 
-require("dotenv").config();
-const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-const path = require("path");
-const connectDB = require("./config/db");
-// Connect to MongoDB
-connectDB();
-console.log("MongoDB URI:", process.env.MONGODB_URI);
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
-// Middleware
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+const io = new Server(server);
+
+// Middleware setup
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Parse incoming JSON requests
+
+const dotenv = require("dotenv");
+
+const connectDB = require("./config/db");
+connectDB();
 
 //Models
 const DriverLocationStatus = require("./models/DriverLocationStatus");
 const FifoStationData = require("./models/FifoStationData");
 const Station = require("./models/Station"); // Import the Station model
 
-// Initialize App and Socket.IO
-
-
-// Routes
+// Routes setup
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/vehicle-type/", require("./routes/vehicleTypeRoutes"));
 app.use("/api/driver-type/", require("./routes/driverTypeRoutes"));
@@ -36,8 +33,18 @@ app.use("/api/driver", require("./routes/driverRoutes"));
 app.use("/api/ride-request", require("./routes/rideRequestRoutes"));
 app.use("/api/stations", require("./routes/stationRoutes"));
 
+// Serve static files (if any)
+app.use(express.static(path.join(__dirname, 'public')));  // Static folder, if any
 
-const rideRequestController = require('./controllers/rideRequestController');
+// Set view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Socket.IO handling for updates
+const driverController = require("./controllers/driverController");
+const rideRequestController = require("./controllers/rideRequestController");
+
+
 // Render Main Page
 app.get("/", (req, res) => {
   res.render("index");
@@ -59,14 +66,15 @@ const haversineDistance = (lat1, lon1, lat2, lon2) => {
   return R * c * 1000; // Distance in meters
 };
 
-// Socket.IO Connection
-io.on("connection", (socket) => {
-  console.log("New client connected");
 
-  // Handle random driver input
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  ///////////////////////// START //////////////////////////////////////
+  // Handle Nearest Driver Search for FIO and Normal Search ///////////
+ 
   socket.on("addRandomDriver", async (data) => {
     try {
-        console.log("Frst time entry");
       const { latitude, longitude, driverId } = data; // Include driverId from client if available
       console.log("driver data is ", data);
 
@@ -136,7 +144,7 @@ io.on("connection", (socket) => {
               type: "Point",
               coordinates: [longitude, latitude],
             },
-            stationFifo: nearestStation.stationFifo,
+            stationName: nearestStation.stationName,
             status: "idle",
             stationId: nearestStation.stationId, // Link driver with the station
             arrivalTime: arrivalTime, // Set the arrival time when the driver reaches the station
@@ -171,36 +179,42 @@ io.on("connection", (socket) => {
       console.error("Error adding or updating driver:", error);
     }
   });
+  ///////////////////////// END DRIVER SEARCH ///////////////////////////////// 
 
 
 
-  // When a ride request is made, try to find an idle driver
-  // socket.on('rideRequest', async (data) => {
-  //   console.log('----RIDE REQUEST- DATA----');
-  //   console.log(data);
-  //   // Call the rideRequestController to handle the logic
-  //   await rideRequestController.createRideRequest(socket, data);
-  // });
+  // Listen for location updates from the client
+  socket.on('updateDriverLocation', (data) => {
+    driverController.updateDriverLocation(data);
+    // Broadcast the updated location to other clients
+    socket.broadcast.emit('driverLocationUpdate', data);
+  });
 
-  // socket.on('rideAssigned',  (rideDetails) => {
-  //   console.log(`Ride Assigned from User:`, rideDetails);
-  // });
+  ///////////////////////// START RIDE REQUEST ///////////////////////////////// 
+  // When a ride request is made, try to find an idle driver //////////////////
+   socket.on('rideRequest', async (data) => {
+    console.log('----SERVER JS KA DATA----');
+    console.log(data);
+    // Call the rideRequestController to handle the logic
+    await rideRequestController.createRideRequest(socket, data);
+  });
 
-  // socket.on('rideCancelled',  (rideDetails) => {
-  //   console.log(`Ride Cancelled by User:`, rideDetails);
-  // });
+  socket.on('rideAssigned',  (rideDetails) => {
+    console.log(`Ride Assigned from User perspective:`, rideDetails);
+  });
 
   socket.on('noDriversAvailable', () => {
     console.log(`Driver is not available: ${socket.id}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
   });
 });
+///////////////////////// END RIDE REQUEST ///////////////////////////////// 
 
-// Start Server
+
+// Start the server
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+

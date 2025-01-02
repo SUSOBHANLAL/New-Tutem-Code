@@ -1,13 +1,16 @@
 // routes/driverRoutes.js
 const express = require("express");
+const {
+  addDriver,
+  getNearestFIFOStation
+} = require("../controllers/driverController");
+
 const router = express.Router();
-const driverController = require("../controllers/driverController");
-// const getNearestDrivers = require("../controllers/driverController");
-// const validateDriverId = require('../middlewares/driver_middleware');
 
-router.get("/location", driverController.getLocationPage);
+// Routes
+router.post("/add", addDriver);
 
-//get the list of all available drivers nearest to given lat, long
-router.get("/available-drivers", driverController.getNearestDrivers);
+// POST route to find the nearest station drivers or normal nearest drivers
+router.post("/find-driver", getNearestFIFOStation);
 
 module.exports = router;
