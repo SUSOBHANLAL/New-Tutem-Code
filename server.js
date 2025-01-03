@@ -1,6 +1,7 @@
 
 require("dotenv").config();
 const express = require("express");
+const cors = require('cors');
 const http = require("http");
 const socketIo = require("socket.io");
 const path = require("path");
@@ -10,7 +11,29 @@ connectDB();
 console.log("MongoDB URI:", process.env.MONGODB_URI);
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: 'http://65.1.110.101:5000',  // Allow frontend origin
+    methods: ['GET', 'POST']
+  }
+});
+
+// CORS setup
+const corsOptions = {
+  origin: 'http://65.1.110.101:5000',  // Allow requests from this IP
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+};
+
+app.use(cors(corsOptions));
+
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: 'http://65.1.110.101:5000',  // Allow frontend origin
+//     methods: ['GET', 'POST']
+//   }
+// });
+
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -201,6 +224,6 @@ io.on("connection", (socket) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
