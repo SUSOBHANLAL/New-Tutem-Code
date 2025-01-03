@@ -61,7 +61,7 @@ exports.register = async (req, res) => {
       .json({ message: "User registered. Please verify your email." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: err });
   }
 };
 
