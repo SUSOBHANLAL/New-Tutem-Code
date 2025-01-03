@@ -13,7 +13,7 @@
 //   driversList.appendChild(driverItem);
 // });
 
-const socket = io();
+const socket = io('http://65.1.110.101:5000');
 
 let intervalId = null;
 
