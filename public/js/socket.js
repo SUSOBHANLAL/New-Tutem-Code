@@ -1,37 +1,17 @@
-// const socket = io();
 
-// // Handle "Add Random Driver" button click
-// document.getElementById("addDriverBtn").addEventListener("click", () => {
-//   socket.emit("addRandomDriver");
-// });
 
-// // Listen for newly added drivers
-// socket.on("driverAdded", (driver) => {
-//   const driversList = document.getElementById("driversList");
-//   const driverItem = document.createElement("li");
-//   driverItem.textContent = `ID: ${driver.driverId}, Location: (${driver.location.coordinates[1]}, ${driver.location.coordinates[0]})`;
-//   driversList.appendChild(driverItem);
-// });
 
-const socket = io('http://65.1.110.101:5000');
+
+const socket = io('http://65.1.110.101:5000');  // Update to match server URL
 
 let intervalId = null;
 
-// Handle "Add Random Driver" button click
-// document.getElementById("addDriverBtn").addEventListener("click", () => {
-//   if (!intervalId) {
-//     intervalId = setInterval(() => {
-//       socket.emit("addRandomDriver");
-//     }, 1000); // Send data every second
-//   }
-// });
 
 document.getElementById("addDriverBtn").addEventListener("click", () => {
   console.log('Click done');
   if (!intervalId) {
     intervalId = setInterval(() => {
-      // const referenceLatitude = 17.435768370541712; // Ameerpet
-      // const referenceLongitude = 78.44449563589029; // Ameerpet
+
 
       const referenceLongitude = 78.48572931611685; // mgbs
       const referenceLatitude = 17.378502778550786; // mgbs
