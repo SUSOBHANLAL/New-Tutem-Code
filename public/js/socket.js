@@ -54,3 +54,15 @@ socket.on("driverAdded", (driver) => {
   driverItem.textContent = `ID: ${driver.driverId}, Location: (${driver.location.coordinates[1]}, ${driver.location.coordinates[0]})`;
   driversList.appendChild(driverItem);
 });
+
+
+socket.on("connect_error", (err) => {
+  // the reason of the error, for example "xhr poll error"
+  console.log(err.message);
+
+  // some additional description, for example the status code of the initial HTTP response
+  console.log(err.description);
+
+  // some additional context, for example the XMLHttpRequest object
+  console.log(err.context);
+});

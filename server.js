@@ -14,7 +14,7 @@ const server = http.createServer(app);
 // const io = socketIo(server);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://65.1.110.101:5000',  // Allow frontend origin
+    origin: ['http://65.1.110.101:5000', 'http://localhost:5000'],  // Allow frontend origin
     methods: ['GET', 'POST']
   }
 });
@@ -23,7 +23,7 @@ const io = socketIo(server, {
 
 // CORS setup
 const corsOptions = {
-  origin: 'http://65.1.110.101:5000',  // Allow requests from this IP
+  origin: ['http://65.1.110.101:5000', 'http://localhost:5000'],  // Allow requests from this IP
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -224,6 +224,13 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
+});
+
+io.engine.on("connection_error", (err) => {
+  console.log(err.req);      // the request object
+  console.log(err.code);     // the error code, for example 1
+  console.log(err.message);  // the error message, for example "Session ID unknown"
+  console.log(err.context);  // some additional error context
 });
 
 // Start Server
