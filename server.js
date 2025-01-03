@@ -11,9 +11,18 @@ connectDB();
 console.log("MongoDB URI:", process.env.MONGODB_URI);
 const app = express();
 const server = http.createServer(app);
+// const io = socketIo(server);
+// const io = socketIo(server, {
+//   cors: {
+//     origin: 'http://65.1.110.101:5000',  // Allow frontend origin
+//     methods: ['GET', 'POST']
+//   }
+// });
+
+
 const io = socketIo(server, {
   cors: {
-    origin: 'http://65.1.110.101:5000',  // Allow frontend origin
+    origin: '*', // Allow all origins for testing (can be restricted in production)
     methods: ['GET', 'POST']
   }
 });
@@ -22,7 +31,8 @@ const io = socketIo(server, {
 const corsOptions = {
   origin: 'http://65.1.110.101:5000',  // Allow requests from this IP
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
 
 app.use(cors(corsOptions));
